@@ -1,8 +1,8 @@
-import Floor from "./components/Floor";
+import Floor from "./components/FloorBar";
 
 function App() {
 	return (
-		<div className="App">
+		<div className="w-screen h-screen flex-center min-w-[768px]">
 			<Floor />
 		</div>
 	);
