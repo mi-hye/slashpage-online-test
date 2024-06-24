@@ -17,7 +17,7 @@ interface ElevatorContextType {
 const ElevatorContext =
 	createContext<ElevatorContextType | null>(null);
 
-function ElevatorManagerContext({ children }: Props) {
+function ElevatorManagerProvider({ children }: Props) {
 	const elevatorManager = useElevatorManager();
 
 	return (
@@ -27,4 +27,4 @@ function ElevatorManagerContext({ children }: Props) {
 	);
 }
 
-export default ElevatorManagerContext;
+export { ElevatorContext, ElevatorManagerProvider };
