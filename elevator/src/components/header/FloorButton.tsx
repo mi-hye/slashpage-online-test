@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface PropsType {
 	floor: number;
@@ -6,6 +6,7 @@ interface PropsType {
 		React.SetStateAction<number>
 	>;
 	isAllActive: boolean;
+	currentActive: { [key: string]: number };
 }
 
 const activeStyle = "font-bold text-red-500";
@@ -14,6 +15,7 @@ function FloorButton({
 	floor,
 	setTargetFloor,
 	isAllActive,
+	currentActive,
 }: PropsType) {
 	const [active, setActive] = useState(false);
 
@@ -21,6 +23,11 @@ function FloorButton({
 		setActive(true);
 		setTargetFloor(floor);
 	};
+
+	useEffect(() => {
+		const activeFloor = Object.values(currentActive);
+		if (!activeFloor.includes(floor)) setActive(false);
+	}, [currentActive, floor]);
 
 	return (
 		<div

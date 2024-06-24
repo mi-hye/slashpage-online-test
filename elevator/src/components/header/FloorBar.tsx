@@ -5,9 +5,8 @@ import { ElevatorContext } from "../../provider/ElevatorManagerProvider";
 const TOTAL_FLOOR = 15;
 
 function Floor() {
-	const { isAllActive, setTargetFloor } =
+	const { isAllActive, setTargetFloor, currentActive } =
 		useContext(ElevatorContext);
-
 	return (
 		<header className="my-5 w-[90%] h-13 flex">
 			<span className="w-10 mx-5 flex-center font-semibold">
@@ -26,6 +25,7 @@ function Floor() {
 						floor={i + 1}
 						setTargetFloor={setTargetFloor}
 						isAllActive={isAllActive}
+						currentActive={currentActive}
 					/>
 				))}
 			</div>
