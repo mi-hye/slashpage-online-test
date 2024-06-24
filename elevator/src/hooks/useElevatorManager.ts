@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface PropsType {
+	//DELETE
 	targetFloor: number;
 }
 interface ObjectType {
@@ -32,7 +33,7 @@ function findTargetElevator(
 		return prev;
 	}, []);
 
-	if (!unActiveElevators.length) return null;
+	if (!unActiveElevators.length) return "";
 	//배열에 아무런 값도 없을때 모든 엘베 움직임
 	if (unActiveElevators.length === 1)
 		//한개면 해당 배열 출력
@@ -42,8 +43,10 @@ function findTargetElevator(
 	return diffFloor(manager, targetFloor, unActiveElevators);
 }
 
-function useElevatorManager({ targetFloor }: PropsType) {
-	const [manager, setManager] = useState({
+function useElevatorManager() {
+	const target = useRef("");
+	const [targetFloor, setTargetFloor] = useState(0);
+	const [manager, setManager] = useState<ObjectType>({
 		firstElevator: 1,
 		secondElevator: 1,
 		thirdElevator: 1,
@@ -51,17 +54,42 @@ function useElevatorManager({ targetFloor }: PropsType) {
 	const [currentActive, setCurrentActive] = useState({});
 	const [isAllActive, setIsAllActive] = useState(false);
 
-	const target = findTargetElevator(
-		manager,
-		currentActive,
-		targetFloor
-	);
-	if (target)
-		//타겟 존재 =해당 엘베 가동
-		setCurrentActive((prev) => ({ ...prev, target }));
-	else setIsAllActive(true);
+	useEffect(() => {
+		if (!targetFloor) return;
 
-	return { manager, setManager, isAllActive };
+		target.current = findTargetElevator(
+			manager,
+			currentActive,
+			targetFloor
+		);
+
+		const targetStr = target.current;
+		if (targetStr) {
+			//타겟 존재 =해당 엘베 가동
+			setIsAllActive(false);
+
+			const currFloor = manager[targetStr];
+			const delay =
+				Math.abs(currFloor - targetFloor) * 1000;
+			const interval = setInterval(() => {
+				setManager((prev) => ({
+					...prev,
+					[targetStr]: prev[targetStr] + 1,
+				}));
+			}, 1000);
+			setTimeout(() => {
+				clearInterval(interval);
+			}, delay);
+
+			setCurrentActive((prev) => ({
+				...prev,
+				[targetStr]: targetStr,
+			}));
+		} else setIsAllActive(true);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [targetFloor]);
+
+	return { manager, isAllActive, setTargetFloor };
 }
 
 export default useElevatorManager;
