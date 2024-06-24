@@ -65,13 +65,16 @@ function useElevatorManager() {
 			const interval = setInterval(() => {
 				setManager((prev) => ({
 					...prev,
-					[targetStr]: prev[targetStr] + 1,
+					[targetStr]:
+						currFloor < targetFloor
+							? prev[targetStr] + 1
+							: prev[targetStr] - 1,
 				}));
 			}, 1000);
 			setTimeout(() => {
 				clearInterval(interval);
 				setCurrentActive((prev) => {
-					const newState: { [key: string]: string } = {
+					const newState: { [key: string]: number } = {
 						...prev,
 					};
 					delete newState[targetStr];
@@ -81,7 +84,7 @@ function useElevatorManager() {
 
 			setCurrentActive((prev) => ({
 				...prev,
-				[targetStr]: targetStr,
+				[targetStr]: targetFloor,
 			}));
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -92,11 +95,15 @@ function useElevatorManager() {
 		if (currNum === 3) {
 			setIsAllActive(true);
 		} else setIsAllActive(false);
-
-		console.log(currentActive); //DELETE
 	}, [currentActive]);
 
-	return { target, manager, isAllActive, setTargetFloor };
+	return {
+		target,
+		manager,
+		currentActive,
+		isAllActive,
+		setTargetFloor,
+	};
 }
 
 export default useElevatorManager;

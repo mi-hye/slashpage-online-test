@@ -11,6 +11,7 @@ interface Props {
 interface ElevatorContextType {
 	target: React.MutableRefObject<string> | null;
 	manager: { [key: string]: number };
+	currentActive: { [key: string]: number };
 	isAllActive: boolean;
 	setTargetFloor: Dispatch<SetStateAction<number>>;
 }
@@ -18,6 +19,7 @@ interface ElevatorContextType {
 const defaultContext: ElevatorContextType = {
 	target: null,
 	manager: {},
+	currentActive: {},
 	isAllActive: false,
 	setTargetFloor: () => {},
 };
