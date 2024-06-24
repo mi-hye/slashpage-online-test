@@ -15,8 +15,10 @@ function Floor() {
 			</span>
 			<div
 				className={`w-full h-full flex justify-evenly border border-r-0 ${
-					isAllActive ? "bg-gray-200 text-black" : ""
-				}`}
+					isAllActive
+						? "bg-gray-200 text-black pointer-events-none"
+						: ""
+				} `}
 			>
 				{Array.from({ length: TOTAL_FLOOR }, (_, i) => (
 					<FloorButton
