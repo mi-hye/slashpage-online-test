@@ -1,9 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 
-interface PropsType {
-	//DELETE
-	targetFloor: number;
-}
 interface ObjectType {
 	[key: string]: number;
 }
@@ -34,12 +30,9 @@ function findTargetElevator(
 	}, []);
 
 	if (!unActiveElevators.length) return "";
-	//배열에 아무런 값도 없을때 모든 엘베 움직임
 	if (unActiveElevators.length === 1)
-		//한개면 해당 배열 출력
 		return unActiveElevators[0];
 
-	//두개 이상이면 타겟이랑 비교
 	return diffFloor(manager, targetFloor, unActiveElevators);
 }
 
@@ -64,10 +57,8 @@ function useElevatorManager() {
 		);
 
 		const targetStr = target.current;
-		if (targetStr) {
-			//타겟 존재 =해당 엘베 가동
-			setIsAllActive(false);
 
+		if (targetStr) {
 			const currFloor = manager[targetStr];
 			const delay =
 				Math.abs(currFloor - targetFloor) * 1000;
@@ -79,17 +70,33 @@ function useElevatorManager() {
 			}, 1000);
 			setTimeout(() => {
 				clearInterval(interval);
+				setCurrentActive((prev) => {
+					const newState: { [key: string]: string } = {
+						...prev,
+					};
+					delete newState[targetStr];
+					return newState;
+				});
 			}, delay);
 
 			setCurrentActive((prev) => ({
 				...prev,
 				[targetStr]: targetStr,
 			}));
-		} else setIsAllActive(true);
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [targetFloor]);
 
-	return { manager, isAllActive, setTargetFloor };
+	useEffect(() => {
+		const currNum = Object.keys(currentActive).length;
+		if (currNum === 3) {
+			setIsAllActive(true);
+		} else setIsAllActive(false);
+
+		console.log(currentActive); //DELETE
+	}, [currentActive]);
+
+	return { target, manager, isAllActive, setTargetFloor };
 }
 
 export default useElevatorManager;

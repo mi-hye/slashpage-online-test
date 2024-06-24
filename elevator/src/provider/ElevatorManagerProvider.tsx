@@ -9,13 +9,20 @@ interface Props {
 	children: React.ReactNode;
 }
 interface ElevatorContextType {
+	target: React.MutableRefObject<string> | null;
 	manager: { [key: string]: number };
 	isAllActive: boolean;
 	setTargetFloor: Dispatch<SetStateAction<number>>;
 }
 
+const defaultContext: ElevatorContextType = {
+	target: null,
+	manager: {},
+	isAllActive: false,
+	setTargetFloor: () => {},
+};
 const ElevatorContext =
-	createContext<ElevatorContextType | null>(null);
+	createContext<ElevatorContextType>(defaultContext);
 
 function ElevatorManagerProvider({ children }: Props) {
 	const elevatorManager = useElevatorManager();
